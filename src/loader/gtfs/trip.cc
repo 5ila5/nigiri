@@ -188,46 +188,15 @@ void trip::interpolate() {
   }
 }
 
-std::string trip::display_name(timetable const& tt) const {
-  auto const is_digit = [](char const x) { return x >= '0' && x <= '9'; };
-  if (route_->clasz_ == clasz::kBus) {
-    return route_->short_name_.empty() ? "Bus " + short_name_
-                                       : "Bus " + route_->short_name_;
-  } else if (route_->clasz_ == clasz::kTram) {
-    return route_->short_name_.empty() ? "Tram " + short_name_
-                                       : "Tram " + route_->short_name_;
-  }
-
-  auto const trip_name_is_number =
-      !short_name_.empty() && utl::all_of(short_name_, is_digit);
-  if (!route_->short_name_.starts_with("IC") &&
-      route_->agency_ != provider_idx_t::invalid() &&
-      tt.providers_[route_->agency_].long_name_ == "DB Fernverkehr AG") {
-    if (route_->clasz_ == clasz::kHighSpeed) {
-      return trip_name_is_number
-                 ? fmt::format("ICE {}", utl::parse<int>(short_name_))
-                 : fmt::format("ICE {}", route_->short_name_);
-    } else if (route_->clasz_ == clasz::kLongDistance) {
-      return trip_name_is_number
-                 ? fmt::format("IC {}", utl::parse<int>(short_name_))
-                 : fmt::format("IC {}", route_->short_name_);
+std::string trip::display_name() const {
+  for (auto const str :
+       {std::string_view{route_->short_name_},
+        std::string_view{route_->long_name_}, std::string_view{short_name_}}) {
+    if (!str.empty()) {
+      return std::string{str};
     }
   }
-
-  auto const starts_with_letter_and_ends_with_number =
-      [](std::string_view line_id) {
-        return !(line_id.front() >= '0' && line_id.front() <= '9') &&
-               (line_id.back() >= '0' && line_id.back() <= '9');
-      };
-
-  if (starts_with_letter_and_ends_with_number(route_->short_name_)) {
-    return route_->short_name_;
-  } else if (trip_name_is_number) {
-    return fmt::format("{} {}", route_->short_name_,
-                       utl::parse<int>(short_name_));
-  } else {
-    return fmt::format("{} {}", route_->short_name_, short_name_);
-  }
+  return {};
 }
 
 clasz trip::get_clasz(timetable const& tt) const {
@@ -264,7 +233,8 @@ trip_data read_trips(
     utl::csv_col<utl::cstr, UTL_NAME("route_id")> route_id_;
     utl::csv_col<utl::cstr, UTL_NAME("service_id")> service_id_;
     utl::csv_col<utl::cstr, UTL_NAME("trip_id")> trip_id_;
-    utl::csv_col<utl::cstr, UTL_NAME("trip_headsign")> trip_headsign_;
+    utl::csv_col<cista::raw::generic_string, UTL_NAME("trip_headsign")>
+        trip_headsign_;
     utl::csv_col<utl::cstr, UTL_NAME("trip_short_name")> trip_short_name_;
     utl::csv_col<utl::cstr, UTL_NAME("block_id")> block_id_;
     utl::csv_col<utl::cstr, UTL_NAME("shape_id")> shape_id_;

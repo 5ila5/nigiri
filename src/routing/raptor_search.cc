@@ -40,18 +40,18 @@ routing_result<raptor_stats> raptor_search_with_vias(
   //  }
   //  return {};
   if (rtt == nullptr) {
-    using algo_t =
-        std::conditional_t<std::is_same_v<AlgoState, gpu::gpu_raptor_state>,
-                           gpu::gpu_raptor<SearchDir, false, Vias>,
-                           raptor<SearchDir, false, Vias>>;
+    using algo_t = std::conditional_t<
+        std::is_same_v<AlgoState, gpu::gpu_raptor_state>,
+        gpu::gpu_raptor<SearchDir, false, Vias>,
+        raptor<SearchDir, false, Vias, search_mode::kOneToOne>>;
     return search<SearchDir, algo_t>{tt,      rtt,          s_state,
                                      r_state, std::move(q), timeout}
         .execute();
   } else {
-    using algo_t =
-        std::conditional_t<std::is_same_v<AlgoState, gpu::gpu_raptor_state>,
-                           gpu::gpu_raptor<SearchDir, true, Vias>,
-                           raptor<SearchDir, true, Vias>>;
+    using algo_t = std::conditional_t<
+        std::is_same_v<AlgoState, gpu::gpu_raptor_state>,
+        gpu::gpu_raptor<SearchDir, true, Vias>,
+        raptor<SearchDir, true, Vias, search_mode::kOneToOne>>;
     return search<SearchDir, algo_t>{tt,      rtt,          s_state,
                                      r_state, std::move(q), timeout}
         .execute();

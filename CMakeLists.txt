@@ -84,11 +84,13 @@ else ()
 endif ()
 
 
-# --- MAIN ---
-file(GLOB_RECURSE nigiri-server-files server/main.cc)
-add_executable(nigiri-server ${nigiri-server-files})
-target_link_libraries(nigiri-server PRIVATE nigiri)
-target_compile_features(nigiri-server PUBLIC cxx_std_23)
+# --- LIB ---
+file(GLOB_RECURSE nigiri-files src/*.cc)
+add_library(nigiri ${nigiri-files})
+target_include_directories(nigiri PUBLIC include)
+target_link_libraries(nigiri PUBLIC cista geo utl fmt date miniz date-tz wyhash unordered_dense gtfsrt oh opentelemetry_api pugixml)
+target_compile_features(nigiri PUBLIC cxx_std_23)
+target_compile_options(nigiri PRIVATE ${nigiri-compile-options})
 
 # --- IMPORTER ---
 file(GLOB_RECURSE nigiri-import-files exe/import.cc)
@@ -120,15 +122,6 @@ add_executable(nigiri-test ${nigiri-test-files})
 target_include_directories(nigiri-test PRIVATE include)
 target_link_libraries(nigiri-test PRIVATE nigiri gtest ianatzdb-res nigiri-generated)
 target_compile_options(nigiri-test PRIVATE ${nigiri-compile-options})
-
-
-# --- LIB ---
-file(GLOB_RECURSE nigiri-files src/*.cc)
-add_library(nigiri ${nigiri-files})
-target_include_directories(nigiri PUBLIC include)
-target_link_libraries(nigiri PUBLIC cista geo utl fmt date miniz date-tz wyhash unordered_dense gtfsrt oh opentelemetry_api pugixml)
-target_compile_features(nigiri PUBLIC cxx_std_23)
-target_compile_options(nigiri PRIVATE ${nigiri-compile-options})
 
 if (NIGIRI_CUDA)
   if (MSVC)

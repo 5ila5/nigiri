@@ -42,10 +42,10 @@ struct stop {
   }
 
   constexpr bool in_allowed(profile_idx_t const p) const {
-    return p == 2U ? in_allowed_wheelchair() : in_allowed();
+    return p == kWheelchairProfile ? in_allowed_wheelchair() : in_allowed();
   }
   constexpr bool out_allowed(profile_idx_t const p) const {
-    return p == 2U ? out_allowed_wheelchair() : out_allowed();
+    return p == kWheelchairProfile ? out_allowed_wheelchair() : out_allowed();
   }
 
   template <direction SearchDir>

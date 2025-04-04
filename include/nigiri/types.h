@@ -153,6 +153,7 @@ using shape_offset_t = cista::strong<std::uint32_t, struct _shape_offset>;
 using shape_offset_idx_t =
     cista::strong<std::uint32_t, struct _shape_offset_idx>;
 using trip_idx_t = cista::strong<std::uint32_t, struct _trip_idx>;
+using route_id_idx_t = cista::strong<std::uint32_t, struct _route_id_idx>;
 using trip_id_idx_t = cista::strong<std::uint32_t, struct _trip_id_str_idx>;
 using transport_idx_t = cista::strong<std::uint32_t, struct _transport_idx>;
 using source_idx_t = cista::strong<std::uint16_t, struct _source_idx>;
@@ -164,6 +165,7 @@ using footpath_idx_t = cista::strong<std::uint32_t, struct _footpath_idx>;
 using source_file_idx_t = cista::strong<std::uint16_t, struct _source_file_idx>;
 
 using profile_idx_t = std::uint8_t;
+constexpr auto const kWheelchairProfile = profile_idx_t{2U};
 static constexpr auto const kMaxProfiles = profile_idx_t{8};
 
 using rt_trip_idx_t = cista::strong<std::uint32_t, struct _trip_idx>;

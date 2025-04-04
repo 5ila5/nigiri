@@ -40,6 +40,12 @@ struct footpath {
     }
   }
 
+  static auto cmp_by_duration() {
+    return [](footpath const& a, footpath const& b) {
+      return a.duration() < b.duration();
+    };
+  }
+
   CISTA_CUDA_COMPAT location_idx_t target() const {
     return location_idx_t{target_};
   }
